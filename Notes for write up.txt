@@ -1,0 +1,14 @@
+Economic Data
+Unable to use api as there were none available for the year 2021
+Used this site: https://www.census.gov/quickfacts/
+Got population and average income 
+had to use multiprocessing to get the information
+Added logger for debugging
+Alaska and Louisiana uses Borough and Parish instead of county
+Used non standard characters for hyphens and apostrophes which were fun to trouble shoot
+Some counties do not have county in the url so we have to fix that somehow
+
+Party Data
+MIT Election Data and Science Lab, 2018, "County Presidential Election Returns 2000-2020", https://doi.org/10.7910/DVN/VOQCHQ, Harvard Dataverse, V11, UNF:6:HaZ8GWG8D2abLleXN3uEig== [fileUNF] 
+Alsaska written as districts not county names as in previous database
+Multiple columns for each county and candiate haad to be summed together 
