@@ -10,9 +10,9 @@ voting_df = pd.read_csv("counting_voting_info.csv")
 
 
 database_username = 'admin'
-database_password = 'Nezzy559'
-database_ip       = 'stats-db.cc4nxcpkcpin.us-west-1.rds.amazonaws.com'
-database_name     = 'stats_db'
+database_password = 'passypass'
+database_ip       = 'ip'
+database_name     = 'db'
 database_connection = sqlalchemy.create_engine('mysql+mysqlconnector://{0}:{1}@{2}/{3}'.
                                                format(database_username, database_password, 
                                                       database_ip, database_name))
