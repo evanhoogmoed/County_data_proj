@@ -37,7 +37,12 @@ def create_county_map():
     return geoData
 
 def make_folium_map(df):   
-    m = folium.Map(location=[40, -102], tiles="cartodbpositron", zoom_start=4)
+    m = folium.Map(location=[40, -102], tiles="cartodbpositron", zoom_start=5)
+
+    style = {'color': '#276221'}
+    state_geo = f"{url}/us-states.json"
+    folium.GeoJson(state_geo, name="geojson",style_function=lambda x:style).add_to(m)
+
     folium.Choropleth(
         geo_data=df,
         name="choropleth",
@@ -90,6 +95,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
