@@ -37,6 +37,7 @@ def create_county_map():
     #print(geoData.head())
     return geoData
 
+#functions the API calls to create maps
 def make_vaccination_map():
     conn = db_connect()
     countydf = create_county_map()
@@ -45,6 +46,65 @@ def make_vaccination_map():
     m = make_folium_map(merged_vacc_df, "Fully_Vaccinated", "Fully Vaccinated (%)", "YlGn",'#276221') 
     return m
 
+def make_income_map():
+    conn = db_connect()
+    countydf = create_county_map()
+    incomedf = income_df(conn)
+    merged_income_df = pd.merge(countydf, incomedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    m = make_folium_map(merged_income_df, "Income", "Median Income", "YlOrRd",'#8c2d04') 
+    return m
+
+def make_party_map():
+    conn = db_connect()
+    countydf = create_county_map()
+    partydf = party_df(conn)
+    merged_party_df = pd.merge(countydf, partydf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    m = make_folium_party_map(merged_party_df,'#276221') 
+    return m
+
+def county_style(fips,winner,function=False):
+    
+    #Set state colour
+    if winner == 'joseph r biden jr':
+        color = '#4f7bff' #blue
+    elif winner == 'donald j trump':
+        color = '#ff5b4f' #red
+    else:
+        color = '#a64dff' #purple
+    
+    #Set state style
+    if function == False:
+        # Format for style_dictionary
+        county_style = {
+            'opacity': 1,
+            'color': color,
+        } 
+    else:
+        # Format for style_function
+        county_style = {
+             'fillOpacity': 1,
+             'weight': 1,
+             'fillColor': color,
+             'color': '#000000'}    
+  
+    return county_style
+
+def style_function(feature):
+    FIPS_Code = feature['properties']['FIPS_Code']
+    winner = feature['properties']['Winner']
+    style = county_style(FIPS_Code,winner,function=True)
+    
+    return style
+
+
+def make_folium_party_map(df,line_color):   
+    m = folium.Map(location=[38, -99], tiles="cartodbpositron", zoom_start=5)
+
+    style = {'color': line_color}
+    state_geo = f"{url}/us-states.json"
+    folium.GeoJson(data= df.to_json(),style_function=style_function).add_to(m)
+    folium.GeoJson(state_geo, name="geojson",style_function=lambda x:style).add_to(m)
+    return m
 
 
 def make_folium_map(df,display_column,measurement,coloring,line_color):   
@@ -69,7 +129,6 @@ def make_folium_map(df,display_column,measurement,coloring,line_color):
 
     return m
 
-
 #format the vaccine data to be merged with county map
 def vaccine_df(conn):
     vaccine_df = pd.read_sql("SELECT * FROM vaccines", conn)
@@ -87,6 +146,14 @@ def income_df(conn):
     income_df.dropna(subset=['Income'], inplace=True)
     
     return income_df
+
+def party_df(conn):
+    partydf = pd.read_sql("SELECT * FROM politics", conn)
+    partydf = partydf.sort_values(by=["State_Abrev", "County"])
+    partydf = split_fips_code(partydf)
+    partydf.dropna(subset=['Winner'], inplace=True)
+    
+    return partydf
 
 #split the FIPS code into state and county codes
 def split_fips_code(df):
@@ -106,24 +173,31 @@ def main():
     countydf = create_county_map()
     vaccinedf = vaccine_df(conn)
     incomedf = income_df(conn)
+    partydf = party_df(conn)
+    print(partydf.head())
 
  
-    #merge countydf and vaccine df on STATE and COUNTY
+    #create vaccine map
     merged_vacc_df = pd.merge(countydf, vaccinedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
-    
     m_vaccinated = make_folium_map(merged_vacc_df, "Fully_Vaccinated", "Fully Vaccinated (%)", "YlGn",'#276221') 
-    #save to html
     m_vaccinated.save("vaccinated_map.html")
 
 
+    #create income map
     merged_income_df = pd.merge(countydf, incomedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
     m_income = make_folium_map(merged_income_df, "Income", "Median Income", "YlOrRd",'#8c2d04') 
-    #save to html
     m_income.save("income_map.html")
+
+    #create party map
+    merged_party_df = pd.merge(countydf, partydf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    m_party = make_folium_party_map(merged_party_df,'#000000')
+    m_party.save("party_map.html")
+
 
     #open html in browser
     #webbrowser.open("vaccinated_map.html")
-    webbrowser.open("income_map.html")
+    #webbrowser.open("income_map.html")
+    #webbrowser.open("party_map.html")
 
 
 
