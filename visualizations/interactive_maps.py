@@ -6,6 +6,7 @@ import pandas as pd
 import webbrowser
 import sqlalchemy
 import geopandas as gpd
+from shapely.geometry import Polygon, mapping
 
 def db_connect():
     database_username = 'admin'
@@ -33,13 +34,23 @@ def create_county_map():
     stateToRemove = ['02', '72']
     geoData = geoData[~geoData.STATE.isin(stateToRemove)]
 
-    print(geoData.head())
+    #print(geoData.head())
     return geoData
 
-def make_folium_map(df):   
-    m = folium.Map(location=[40, -102], tiles="cartodbpositron", zoom_start=5)
+def make_vaccination_map():
+    conn = db_connect()
+    countydf = create_county_map()
+    vaccinedf = vaccine_df(conn)
+    merged_vacc_df = pd.merge(countydf, vaccinedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    m = make_folium_map(merged_vacc_df, "Fully_Vaccinated", "Fully Vaccinated (%)", "YlGn",'#276221') 
+    return m
 
-    style = {'color': '#276221'}
+
+
+def make_folium_map(df,display_column,measurement,coloring,line_color):   
+    m = folium.Map(location=[38, -99], tiles="cartodbpositron", zoom_start=5)
+
+    style = {'color': line_color}
     state_geo = f"{url}/us-states.json"
     folium.GeoJson(state_geo, name="geojson",style_function=lambda x:style).add_to(m)
 
@@ -47,53 +58,84 @@ def make_folium_map(df):
         geo_data=df,
         name="choropleth",
         data=df,
-        columns=["COUNTY", "Fully_Vaccinated"],
+        columns=["COUNTY", display_column],
         key_on="feature.properties.COUNTY",
-        fill_color="YlGn",
+        fill_color=coloring,
         fill_opacity=0.7,
         line_opacity=0.2,
-        legend_name="Fully Vaccinated (%)",
+        legend_name=measurement,
     ).add_to(m)
-    #save to html
-    m.save("map.html")
 
-    #open html in browser
-    webbrowser.open("map.html")
 
-#get vaccine_df and seperate the FIPS code to state and county codes 
-def vaccine_df():
-    conn = db_connect()
+    return m
+
+
+#format the vaccine data to be merged with county map
+def vaccine_df(conn):
     vaccine_df = pd.read_sql("SELECT * FROM vaccines", conn)
     #sort vaccine_df by State_Abrev and County in reverse
     vaccine_df = vaccine_df.sort_values(by=["State_Abrev", "County"])
-    #make FIPS code a string and drop .0 
-    vaccine_df["FIPS_Code"] = vaccine_df["FIPS_Code"].astype(str).str[:-2]
-    #add column County_Code and set it to the last 3 digits of FIPS_Code
-    vaccine_df["County_Code"] = vaccine_df["FIPS_Code"].astype(str).str[-3:]
-    #if FIPS_CODE is 4 digits add 0 to front
-    vaccine_df["FIPS_Code"] = vaccine_df["FIPS_Code"].apply(lambda x: x.zfill(5))
-    #add column State_Code and set it to the first 2 digits of FIPS_Code
-    vaccine_df["State_Code"] = vaccine_df["FIPS_Code"].astype(str).str[:2]
+    vaccine_df = split_fips_code(vaccine_df)
     vaccine_df.dropna(subset=['Fully_Vaccinated'], inplace=True)
-    print(vaccine_df.head())
 
     return vaccine_df
 
-def main():
-    countydf = create_county_map()
-    vaccinedf = vaccine_df()
-
-    #merge countydf and vaccine df on STATE and COUNTY
-    merged_df = pd.merge(countydf, vaccinedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
-    print(merged_df.head())
+def income_df(conn):
+    income_df = pd.read_sql("SELECT * FROM economics", conn)
+    income_df = income_df.sort_values(by=["State_Abrev", "County"])
+    income_df = split_fips_code(income_df)
+    income_df.dropna(subset=['Income'], inplace=True)
     
-    #print number of Nan values in merged_df
-    print("Number of NaN values in merged_df",merged_df.isna().sum())
-    make_folium_map(merged_df)
+    return income_df
+
+#split the FIPS code into state and county codes
+def split_fips_code(df):
+    df["FIPS_Code"] = df["FIPS_Code"].astype(str).str[:-2]
+    df["County_Code"] = df["FIPS_Code"].astype(str).str[-3:]
+
+    #if the length of FIPS_Code is less than 5, add a 0 to the front
+    df["FIPS_Code"] = df["FIPS_Code"].apply(lambda x: x.zfill(5))
+    df["State_Code"] = df["FIPS_Code"].astype(str).str[:2]
+
+    return df
+
+
+def main():
+    conn = db_connect()
+
+    countydf = create_county_map()
+    vaccinedf = vaccine_df(conn)
+    incomedf = income_df(conn)
+
+ 
+    #merge countydf and vaccine df on STATE and COUNTY
+    merged_vacc_df = pd.merge(countydf, vaccinedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    
+    m_vaccinated = make_folium_map(merged_vacc_df, "Fully_Vaccinated", "Fully Vaccinated (%)", "YlGn",'#276221') 
+    #save to html
+    m_vaccinated.save("vaccinated_map.html")
+
+
+    merged_income_df = pd.merge(countydf, incomedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
+    m_income = make_folium_map(merged_income_df, "Income", "Median Income", "YlOrRd",'#8c2d04') 
+    #save to html
+    m_income.save("income_map.html")
+
+    #open html in browser
+    #webbrowser.open("vaccinated_map.html")
+    webbrowser.open("income_map.html")
+
+
+
 
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
 
 
