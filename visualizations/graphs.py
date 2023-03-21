@@ -76,6 +76,42 @@ def lowest_income_counties(merged_df):
     plt.savefig("low_income_political.svg")
     plt.savefig("low_income_political.jpg")
 
+def scatter_plot(all_df):
+    #plot percent fully_vaccinated vs income 
+    all_df.plot.scatter(x="Income", y="Fully_Vaccinated", c="DarkBlue")
+    #change the dot color based on if the county voted for trump or biden
+    colors = ["#FF6B6B" if x == "donald j trump" else "#2FADCC" if x == "joseph r biden jr" else "green" for x in all_df["Winner"]]
+    plt.scatter(all_df["Income"], all_df["Fully_Vaccinated"], c=colors)
+    return plt
+
+def plt_vacc_income_party(all_df):
+    all_info = scatter_plot(all_df)
+    #add title to graph
+    all_info.title("Income vs. Percent Fully Vaccinated")
+    #add legend
+    red_patch = mpatches.Patch(color='#FF6B6B', label='Republican')
+    blue_patch = mpatches.Patch(color='#2FADCC', label='Democrat')
+    plt.legend(handles=[red_patch, blue_patch])
+    plt.savefig("scatter_all.svg")
+    plt.savefig("scatter_all.jpg")
+    plt.show()
+
+
+def plt_vacc_income_one_party(all_df,winner):
+    #plot percent fully_vaccinated vs income for counties that voted for specific candidate
+    candidate_df = all_df[all_df["Winner"] == winner]
+    #create scatter plot for candidate_Df where dots are red
+    candidate_info = scatter_plot(candidate_df)
+    #add title to graph
+    if winner == "donald j trump":
+        candidate_info.title("Income vs. Percent Fully Vaccinated (Republican)")
+    else:
+        candidate_info.title("Income vs. Percent Fully Vaccinated (Democrat)")
+    plt.savefig("scatter_" + winner + ".svg")
+    plt.savefig("scatter_" + winner + ".jpg")
+    plt.show()
+
+
 
 def main():
     conn = db_connect()
@@ -86,12 +122,21 @@ def main():
     #get columns county, state_abbreviations, and income from economics table
     economics_df = pd.read_sql(sql=text("SELECT * FROM economics"),con=conn.connect())
 
+    vaccine_df = pd.read_sql(sql=text("SELECT * FROM vaccines"),con=conn.connect())
+
     #merge the two dataframes
     merged_df = pd.merge(politics_df, economics_df, how="inner", left_on=["County","State_Abrev"], right_on=["County", "State_Abrev"])
 
+    #merge all three dataframes
+    all_df = pd.merge(merged_df, vaccine_df, how="inner", left_on=["County","State_Abrev"], right_on=["County", "State_Abrev"])
+    #plt_vacc_income_party(all_df)
+    plt_vacc_income_one_party(all_df,"donald j trump")
+    plt_vacc_income_one_party(all_df,"joseph r biden jr")
 
-    highest_income_counties(merged_df)
-    lowest_income_counties(merged_df)
+    #highest_income_counties(merged_df)
+    #lowest_income_counties(merged_df)
+
+
 
 
 
