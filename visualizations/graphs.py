@@ -68,7 +68,7 @@ def lowest_income_counties(merged_df):
     plt.legend(handles=[red_patch, blue_patch])
 
     #adjust size of graph and text
-    plt.gcf().set_size_inches(12, 5)
+    plt.gcf().set_size_inches(14, 5)
     plt.xticks(fontsize=8)
 
     #plt.show()
@@ -111,8 +111,29 @@ def plt_vacc_income_one_party(all_df,winner):
     plt.savefig("scatter_" + winner + ".jpg")
     plt.show()
 
+def box_plot(all_df):
+    #create new data frame with only california, new york, texas, and florida
+    four_states = all_df[all_df["State_x"].isin(["california", "new york", "texas", "florida"])]
+    #create box plot for four states and vaccine
+    four_states.boxplot(column="Fully_Vaccinated", by="State_x")
+    plt.title("Percent Fully Vaccinated by State")
+    plt.xlabel("State")
+    plt.ylabel("Percent Fully Vaccinated")
+    plt.savefig("boxplot_vaccinated.svg")
+    plt.savefig("boxplot_vaccinated.jpg")
+    plt.show()
 
-
+def box_plot_income(all_df):
+    #create new data frame with only california, new york, texas, and florida
+    four_states = all_df[all_df["State_x"].isin(["california", "virginia", "south dakota", "mississippi"])]
+    #create box plot for four states and vaccine
+    four_states.boxplot(column="Income", by="State_x")
+    plt.title("Income by State")
+    plt.xlabel("State")
+    plt.ylabel("Income")
+    plt.savefig("boxplot_income.svg")
+    plt.savefig("boxplot_income.jpg")
+    plt.show()
 def main():
     conn = db_connect()
     
@@ -130,9 +151,11 @@ def main():
     #merge all three dataframes
     all_df = pd.merge(merged_df, vaccine_df, how="inner", left_on=["County","State_Abrev"], right_on=["County", "State_Abrev"])
     #plt_vacc_income_party(all_df)
-    plt_vacc_income_one_party(all_df,"donald j trump")
-    plt_vacc_income_one_party(all_df,"joseph r biden jr")
+    #plt_vacc_income_one_party(all_df,"donald j trump")
+    #plt_vacc_income_one_party(all_df,"joseph r biden jr")
 
+    box_plot(all_df)
+    #box_plot_income(all_df)
     #highest_income_counties(merged_df)
     #lowest_income_counties(merged_df)
 
