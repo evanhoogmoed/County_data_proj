@@ -7,6 +7,12 @@ import './App.css';
 
 import highIncomeGraph from './images/high_income_political.jpg';
 import lowIncomeGraph from './images/low_income_political.jpg';
+import boxplotIncome from './images/boxplot_income.jpg';
+import boxplotVaccination from './images/boxplot_vaccinated.jpg';
+import scatterRepublican from './images/scatter_trump.jpg';
+import scatterDemocrat from './images/scatter_biden.jpg';
+
+
 import { sortByCounty, sortByPopulation, sortByIncome, sortByFullyVaccinated, sortByBoosterRate, sortByTotalVotes, sortByWinnerPercentage, sortByWinner } from './util/sort';
 
 function App() {
@@ -106,13 +112,18 @@ function App() {
 
       <h2 className='title'>Abstract</h2>
       <div className='box'>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore.Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi. Similique quod accusamus iste eveniet, amet laborum numquam ipsa illo quasi cumque quia excepturi enim aliquam dolore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe repudiandae voluptates tempore eligendi.
+      Accessible data is essential for promoting new discoveries and advancing current technologies. The purpose of this project was to construct a new data acquisition tool that makes evaluating and visualizing data simple and efficient. A REST API was created using Flask for running queries on a custom built database. The database included the population count, median income, outcome of the 2020 presidential election, and the percent of fully vaccinated people for United State counties. This information was selected to investigate common stereotypes in American society. This website was built to serve as an interface to the API. It provides several examples on how to visualize and explore the data and provides a graphical interface for querying the database. Please explore this page and try out the API!
       </div>
 
       <h2 className='title'>Examples of Visualizations</h2>
       <div className='grid'>
         <img alt='high income political graph' src={highIncomeGraph} />
         <img alt='low income political graph' src={lowIncomeGraph} />
+        <img alt = 'scatter plot republican' src={scatterRepublican} />
+        <img alt = 'scatter plot democrat' src={scatterDemocrat} />
+        <img alt = 'boxplot income' src={boxplotIncome} />
+        <img alt = 'boxplot vaccination' src={boxplotVaccination} />
+
       </div>
 
       <h2 className='title'>Customizable Heatmap</h2>
