@@ -121,7 +121,7 @@ function App() {
         <option key='vaccination' value="vaccination">Vaccination Rate</option>
         <option key='party' value="party">Political Party</option>
       </select>
-      <iframe title='heatmap' src={`http://localhost:5000/map/${mapOptions}`} />
+      <iframe title='heatmap' src={`http://13.52.103.204:5000/map/${mapOptions}`} />
 
       <h2 className='title'>Rest API Query Tool</h2>
       <div className='flex-row'>

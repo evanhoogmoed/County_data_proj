@@ -1,19 +1,19 @@
 import { CountyData } from "../dto/CountyData";
 
 export async function queryAllCounties() {
-    let query = `http://localhost:5000/api`;
+    let query = `http://13.52.103.204:5000/api`;
     const result = await fetch(query);
     return result.json();
 }
 
 export async function queryStateCounties(state: string) {
-    let query = `http://localhost:5000/api/${state}`;
+    let query = `http://13.52.103.204:5000/api/${state}`;
     const result = await fetch(query);
     return await result.json();
 }
 
 export async function queryCounty(state: string, county: string) {
-    let query = `http://localhost:5000/api/${state}/${county}`;
+    let query = `http://13.52.103.204:5000/api/${state}/${county}`;
     const result = await fetch(query);
     return await result.json();
 }

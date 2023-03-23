@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <App />
-    <SwaggerUI url="http://localhost:5000/swagger" />
+    <SwaggerUI url="http://13.52.103.204:5000/swagger" />
   </React.StrictMode>
 );
 
