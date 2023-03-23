@@ -126,7 +126,7 @@ function App() {
 
       </div>
 
-      <h2 className='title'>Customizable Heatmap</h2>
+      <h2 className='title'>Interactive Maps</h2>
       <select value={mapOptions} onChange={e => setMapOptions(e.target.value)}>
         <option key='income' value="income">Median Income</option>
         <option key='vaccination' value="vaccination">Vaccination Rate</option>
