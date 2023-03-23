@@ -1,0 +1,39 @@
+.app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #dadada;
+}
+
+iframe {
+  height: 90vh;
+  width: 100%;
+  margin: 0px;
+  border: 0px;
+  object-fit: cover;
+}
+
+img {
+  border-radius: .5rem;
+  width: 100%;
+  height: max-content;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+select {
+  width: fit-content;
+  padding: 12px 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+select:hover {
+  border: 1px solid #000;
+  cursor: pointer;
+}

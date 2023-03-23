@@ -1,0 +1,100 @@
+.button {
+  background-color: #61b0feca;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  margin: 4px 2px;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: .5rem;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  background-color: #474947;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+}
+
+/* wheen screen size is under 600px make the grid 1 col wide */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.box {
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  border-radius: .5rem;
+}
+
+.endpoint {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+
+.title {
+  text-align: center;
+}
+
+.rest-table {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  background-color: lightgray;
+  color: black;
+}
+
+.rest-table,
+.table-header,
+.table-data {
+  position: relative;
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 0.5rem;
+}
+
+.table-row:nth-child(even) {
+  background-color: rgba(187, 187, 187, 0.226);
+}
+
+.clickable {
+  cursor: pointer;
+}

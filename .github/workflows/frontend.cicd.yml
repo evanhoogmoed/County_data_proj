@@ -1,0 +1,39 @@
+name: Smart Clamp Frontend CICD
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Installing frontend...
+        run: npm install
+
+      - name: Testing frontend...
+        run: npm run test
+
+      - name: Building frontend...
+        run: npm run build
+        env:
+          CI: ""
+
+      - name: Deploy static site to S3 bucket
+        run: aws s3 sync ./build s3://stats-final-frontend --delete

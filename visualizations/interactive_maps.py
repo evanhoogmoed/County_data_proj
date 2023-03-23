@@ -44,6 +44,8 @@ def make_vaccination_map():
     vaccinedf = vaccine_df(conn)
     merged_vacc_df = pd.merge(countydf, vaccinedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
     m = make_folium_map(merged_vacc_df, "Fully_Vaccinated", "Fully Vaccinated (%)", "YlGn",'#276221') 
+    m.get_root().width = "100%"
+    m.get_root().height = "100%"
     return m
 
 def make_income_map():
@@ -52,6 +54,8 @@ def make_income_map():
     incomedf = income_df(conn)
     merged_income_df = pd.merge(countydf, incomedf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
     m = make_folium_map(merged_income_df, "Income", "Median Income", "YlOrRd",'#8c2d04') 
+    m.get_root().width = "100%"
+    m.get_root().height = "100%"
     return m
 
 def make_party_map():
@@ -60,6 +64,8 @@ def make_party_map():
     partydf = party_df(conn)
     merged_party_df = pd.merge(countydf, partydf, left_on=["STATE", "COUNTY"], right_on=["State_Code", "County_Code"])
     m = make_folium_party_map(merged_party_df,'#276221') 
+    m.get_root().width = "100%"
+    m.get_root().height = "100%"
     return m
 
 def county_style(fips,winner,function=False):

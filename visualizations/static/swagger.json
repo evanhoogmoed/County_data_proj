@@ -1,0 +1,285 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "REST API Documentation"
+  },
+  "tags": [
+    {
+      "name": "API",
+      "description": "Endpoint for grabbing county data"
+    },
+    {
+      "name": "Map",
+      "description": "Endpoint for grabbing heatmap data"
+    }
+  ],
+  "paths": {
+    "/api": {
+      "get": {
+        "tags": ["API"],
+        "summary": "Get all county data",
+        "description": "Returns a list of every county data in the United States excluding Alaska",
+        "operationId": "getAllCounties",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountyData"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{state}": {
+      "get": {
+        "tags": ["API"],
+        "summary": "Get all county data for a state",
+        "description": "Returns a list of every county data in the United States excluding Alaska",
+        "operationId": "getAllStateCounties",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "description": "The state to get county data for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountyData"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{state}/{county}": {
+      "get": {
+        "tags": ["API"],
+        "summary": "Get county data for a specific county",
+        "description": "Returns the specific county data for the given state and county",
+        "operationId": "getCountyUsingStateCounty",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "description": "The state to get county data for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "county",
+            "in": "path",
+            "description": "The county to get data for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/CountyData"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/map/income": {
+      "get": {
+        "tags": ["Map"],
+        "summary": "Get income heatmap data",
+        "description": "Get heatmap data for income in the United States excluding Alaska",
+        "operationId": "getIncomeMap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/map/vaccination": {
+      "get": {
+        "tags": ["Map"],
+        "summary": "Get vaccination heatmap data",
+        "description": "Get heatmap data for vaccination in the United States excluding Alaska",
+        "operationId": "getVaccinationMap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/map/party": {
+      "get": {
+        "tags": ["Map"],
+        "summary": "Get political party heatmap data",
+        "description": "Get heatmap data for political party in the United States excluding Alaska",
+        "operationId": "getPartyMap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountyData": {
+        "type": "object",
+        "properties": {
+          "State": {
+            "type": "string",
+            "description": "The name of the state"
+          },
+          "County": {
+            "type": "string",
+            "description": "The name of the county"
+          },
+          "FIPS_Code": {
+            "type": "number",
+            "description": "The FIPS code of the county"
+          },
+          "Income": {
+            "type": "number",
+            "description": "The median income of the county"
+          },
+          "Fully_Vaccinated": {
+            "type": "number",
+            "description": "The percentage of people fully vaccinated in the county"
+          },
+          "Boosters": {
+            "type": "number",
+            "description": "The percentage of people who have received a booster shot in the county"
+          },
+          "Population": {
+            "type": "number",
+            "description": "The total population of the county"
+          },
+          "Total_Votes": {
+            "type": "number",
+            "description": "The total number of casted votes in the county"
+          },
+          "Winner_Percentage": {
+            "type": "number",
+            "description": "The percentage of votes the winner of the county received"
+          },
+          "Winner": {
+            "type": "string",
+            "description": "The candidate who won the county"
+          }
+        }
+      }
+    }
+  }
+}

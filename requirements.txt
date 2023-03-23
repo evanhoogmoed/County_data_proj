@@ -1,0 +1,11 @@
+flask
+flask_cors
+flask_swagger_ui
+pandas
+sqlalchemy
+pymysql
+bs4
+geopandas
+shapely
+folium
+matplotlib
